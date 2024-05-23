@@ -21,24 +21,24 @@ def beli_tiket_konser():
     global antrian_tiket
     print("Antrian pembelian tiket:")
     while True:
-        nama_pembeli = input("Masukkan nama pembeli (atau ketik 'selesai' untuk mengakhiri): ")
+        nama_pembeli = input("\nMasukkan nama pembeli (atau ketik 'selesai' untuk mengakhiri): ")
         if nama_pembeli.lower() == 'selesai':
             break
         while True:
-            print("Daftar Konser:")
+            print("\nDaftar Konser:")
             for i, konser in enumerate(daftar_konser, start=1):
                 print(f"{i}. {konser}")
-            konser_index = int(input("Pilih konser yang ingin ditonton (masukkan nomor): "))
+            konser_index = int(input("\nPilih konser yang ingin ditonton (masukkan nomor): "))
             if 1 <= konser_index <= len(daftar_konser):
                 konser_dipilih = daftar_konser[konser_index - 1]
                 break
             else:
                 print("Pilihan tidak valid. Harap masukkan nomor yang benar.")
         while True:
-            print("Daftar Jenis Tiket:")
+            print("\nDaftar Jenis Tiket:")
             for i, jenis in enumerate(daftar_jenis_tiket, start=1):
                 print(f"{i}. {jenis}")
-            jenis_index = int(input("Pilih jenis tiket (masukkan nomor): "))
+            jenis_index = int(input("\nPilih jenis tiket (masukkan nomor): "))
             if 1 <= jenis_index <= len(daftar_jenis_tiket):
                 jenis_tiket = daftar_jenis_tiket[jenis_index - 1]
                 break
@@ -54,14 +54,12 @@ def beli_tiket_konser():
 
 def proses_pembelian():
     global antrian_tiket
-    if not antrian_tiket.is_empty():
+    while not antrian_tiket.is_empty():
         pembeli_berikutnya = antrian_tiket.dequeue()
         print(f"Memproses pembelian untuk {pembeli_berikutnya[0]} ({pembeli_berikutnya[1]})...")
         print(f"{pembeli_berikutnya[3]} tiket {pembeli_berikutnya[2]} untuk konser {pembeli_berikutnya[1]} telah dibeli.")
-    else:
-        print("Antrian kosong. Tidak ada yang perlu diproses.")
-
-    print(f"Jumlah antrian: {antrian_tiket.size()}")
+        print(f"Jumlah antrian: {antrian_tiket.size()}")
+    print("Antrian kosong. Tidak ada yang perlu diproses.")
 
 # Membuat objek queue
 antrian_tiket = Queue()
@@ -76,5 +74,4 @@ daftar_konser = ["Nct dream", "Seventeen", "Ive", "New Jeans"]
 beli_tiket_konser()
 
 print("\nProses pembelian:")
-proses_pembelian()
 proses_pembelian()
