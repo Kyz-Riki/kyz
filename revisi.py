@@ -54,11 +54,11 @@ class ConcertManager:
 
     def add_concert(self, concert):
         self.concerts.append(concert)
-        print(f"Konser '{concert.name}' pada tanggal {concert.date} telah ditambahkan.")
+        print(f"Konser '{concert.name}' akan hadir pada tanggal {concert.date}.")
 
     def list_concerts(self):
         if self.concerts:
-            print("\nDaftar konser yang tersedia:\n")
+            print("\nDaftar konser yang tersedia:")
             for i, concert in enumerate(self.concerts, 1):
                 print(f"{i}. {concert.name} ({concert.date})")
         else:
