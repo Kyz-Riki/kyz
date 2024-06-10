@@ -3,7 +3,7 @@ class TicketType:
         self.name = name
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 class Concert:
     def __init__(self, name, date):
@@ -39,7 +39,8 @@ class TicketQueue:
 
     def check_queue(self):
         if self.queue:
-            print("\nDaftar antrian saat ini:")
+            print("\n================================================")
+            print("Daftar antrian saat ini:")
             for i, (name, concert, ticket_type) in enumerate(self.queue, 1):
                 print(f"{i}. {name} (Konser: {concert.name}, Tiket: {ticket_type.name})")
         else:
@@ -48,13 +49,45 @@ class TicketQueue:
     def available_slots(self):
         return self.MAX_QUEUE_SIZE - len(self.queue)
 
+    def print_individual_receipt(self, name, concert, ticket_type, position):
+        print("\nStruk Pembelian Tiket")
+        print("=========================")
+        print(f"Nama: {name}")
+        print(f"Konser: {concert.name}")
+        print(f"Tiket: {ticket_type.name}")
+        print(f"Tanggal Konser: {concert.date}")
+        print(f"Posisi dalam antrian: {position}")
+        print("=========================\n")
+
+    def print_final_receipt(self):
+        print("\n======================================================================")
+        print("Detail Catatan Antrian")
+        print(f"Total antrian yang ditambahkan: {len(self.queue)}")
+        print(f"Sisa slot antrian: {self.available_slots()}")
+        print("Detail Pembeli dan Tiket:")
+        if self.queue:
+            for i, (name, concert, ticket_type) in enumerate(self.queue, 1):
+                print(f"{i}. Nama: {name}, Konser: {concert.name}, Tiket: {ticket_type.name}, Tanggal: {concert.date}")
+        else:
+            print("Tidak ada antrian.")
+        print("Terima kasih telah menggunakan sistem antrian.")
+
+    def print_specific_receipt(self, index):
+        if 0 <= index < len(self.queue):
+            name, concert, ticket_type = self.queue[index]
+            self.print_individual_receipt(name, concert, ticket_type, index + 1)
+        else:
+            print("Indeks tidak valid.")
+
 class ConcertManager:
     def __init__(self):
         self.concerts = []
 
     def add_concert(self, concert):
         self.concerts.append(concert)
-        print(f"Konser '{concert.name}' akan hadir pada tanggal {concert.date}.")
+
+        print(f"\tKonser '{concert.name}' akan hadir pada tanggal {concert.date}")
+        print("\t-------------------------------------------------------")
 
     def list_concerts(self):
         if self.concerts:
@@ -92,27 +125,28 @@ def main():
         concert_manager.add_concert(concert)
 
     while True:
-        print("\n=========================================")
-        print("Sistem Antrian Penjualan Tiket Konser")
-        print("1. Tambah ke antrian")
-        print("2. Hapus dari antrian")
-        print("3. Cek antrian")
-        print("4. List konser")
-        print("5. Cek sisa antrian yang tersedia")
-        print("6. Keluar")
-        print("=========================================")
-        choice = input("Pilih opsi (1/2/3/4/5/6): ")
+        print("\n\t----------------------------------------")
+        print("\t|Sistem Antrian Penjualan Tiket Konser |")
+        print("\t|1. Tambah ke antrian                  |")
+        print("\t|2. Hapus dari antrian                 |")
+        print("\t|3. Cek antrian                        |")
+        print("\t|4. Cetak struk individu               |")
+        print("\t|5. Cek sisa antrian yang tersedia     |")
+        print("\t|6. Keluar                             |")
+        print("\t----------------------------------------")
+
+        choice = input("\tPilih opsi (1/2/3/4/5/6): ")
         
         if choice == '1':
-            name = input("Masukkan nama untuk ditambahkan ke dalam antrian: ")
+            name = input("\nMasukkan nama untuk ditambahkan ke dalam antrian: ")
             concert_manager.list_concerts()
-            concert_index = int(input("\nPilih nomor konser yang ingin ditonton: ")) - 1
+            concert_index = int(input("Pilih nomor konser yang ingin ditonton: ")) - 1
             concert = concert_manager.get_concert_by_index(concert_index)
             if concert:
                 print("\nJenis tiket yang tersedia:")
                 for i, ticket_type in enumerate(concert.ticket_types, 1):
                     print(f"{i}. {ticket_type}")
-                ticket_type_index = int(input("\nPilih nomor jenis tiket: ")) - 1
+                ticket_type_index = int(input("Pilih nomor jenis tiket: ")) - 1
                 if 0 <= ticket_type_index < len(concert.ticket_types):
                     ticket_type = concert.ticket_types[ticket_type_index]
                     ticket_queue.add_to_queue(name, concert, ticket_type)
@@ -123,12 +157,20 @@ def main():
         elif choice == '3':
             ticket_queue.check_queue()
         elif choice == '4':
-            concert_manager.list_concerts()
+            if ticket_queue.queue:
+                ticket_queue.check_queue()
+                index = int(input("Masukkan nomor antrian yang ingin dicetak struknya: ")) - 1
+                ticket_queue.print_specific_receipt(index)
+            else:
+                print("Antrian kosong.")
         elif choice == '5':
             available_slots = ticket_queue.available_slots()
+            print("\n====================================")
             print(f"Sisa antrian yang tersedia: {available_slots} slot.")
+            print("====================================")
         elif choice == '6':
-            print("Terima kasih telah menggunakan sistem antrian.")
+            ticket_queue.print_final_receipt()
+            print("======================================================================")
             break
         else:
             print("Pilihan tidak valid, silakan coba lagi.")
